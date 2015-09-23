@@ -1,0 +1,99 @@
+<#include "/common/head.html">
+<div data-options="region:'north',border:false" style="height:100px;padding:20px 5px 0px 5px;">
+	<div class="easyui-panel" style="padding:5px;">
+        <a id="query${rand}" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">查询</a>
+    	<a id="reset${rand}" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">重置</a>
+    </div>
+	<div class="easyui-panel" style="padding:5px;">
+    	<table >
+    	</table>
+	</div>
+</div>
+<div data-options="region:'center',border:false" style="padding:5px 5px 5px 5px;">
+	<table id="user-dg${rand}"></table>
+</div>
+<script type="text/javascript">
+	$(function(){
+		var dg = $('#user-dg${rand}');
+		dg.edatagrid({
+			url: 'user/list.json',
+		    fit: true,
+		    rownumbers: true,
+		    pagination:true,
+		    pageSize:20,
+		    singleSelect: true,
+		    idField: 'id',
+		    saveUrl: 'user/save.json',
+			updateUrl: 'user/update.json',
+			destroyUrl: 'user/delete.json',
+			onSave:function(index,row){showMessager(row.message);},
+			onDestroy: function(index,row) {showMessager(row.message);},
+			onError: function(index,data) {$.messager.alert('错误', data.message)},
+		    columns:[[
+    			{field:'ck',checkbox:'true',width:50},
+    			{field:'id',title:'序号',hidden:true},
+    			{field:'account',title:'登陆账号',width:120,editor:{
+    				type:'validatebox',
+    				options:{required:true}
+    			}},
+    	        {field:'name',title:'用户名称',width:120,editor:{
+    				type:'text',
+    			}},
+    	        {field:'telephone',title:'电话',width:120,editor:{
+    				type:'text',
+    			}},
+	  	        {field:'mobile',title:'移动电话',width:120,editor:{
+    				type:'text',
+    			}},
+	   	     	{field:'email',title:'电子邮件',width:120,editor:{
+    				type:'text',
+    			}},
+	  	      	{field:'status',title:'是否有效',width:80,formatter: function(value,row,index){
+	  	      		if(value == 0) {
+	  	      			return "有效";
+	  	      		}else {
+	  	      			return "无效";
+	  	      		}
+	  	      	}},
+	  	      	{field:'roleIds',title:'角色',width:210,formatter: function(value,row,index){
+	  	      		var roleNames = '';
+		  	      	$.ajax({ 
+		  	          type: "post",
+		  	          data:{roleIds:row.roleIds},
+		  	          url: "role/queryRoleNames.json", 
+		  	          cache:false, 
+		  	          async:false, 
+		  	          dataType:"json", 
+		  	          success: function(data){ 
+		  	        	roleNames = data;
+		  	          } 
+		  	  		});
+	  	      		return roleNames;
+	  	      	},editor:{
+    				type:'combobox',
+    				options:{
+    					url:'role/list.json',
+    					method:'post',
+    					valueField:'id',
+    	      			textField:'name',
+    					multiple:true,
+    					panelHeight:'auto'
+    				}
+    			}},
+	  	    	{field:'orgId',title:'所属组织',width:100,editor:{
+    				type:'combobox',
+    				options:{}
+    			}},
+	   	     	{field:'createTime',title:'创建时间',width:80},
+	   	        {field:'updateTime',title:'更新时间',width:80}
+		    ]],
+		    toolbar:[
+				{text:'新增',iconCls:'icon-add',handler:function(){dg.edatagrid('addRow');}},
+				{text:'保存',iconCls:'icon-ok',handler:function(){dg.edatagrid('saveRow');}},
+				{text:'取消',iconCls:'icon-cancel',handler:function(){dg.edatagrid('cancelRow');}},
+				{text:'删除',iconCls:'icon-remove',handler:function(){dg.edatagrid('destroyRow');}},
+		    ]
+		});
+	});
+</script>
+<#include "/common/foot.html">

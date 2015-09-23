@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base href="${base}"></base>
+<meta charset="UTF-8">
+<title>开发工具</title>
+<link rel="stylesheet" type="text/css" href="css/themes/default/easyui.css"/>
+<link rel="stylesheet" type="text/css" href="css/themes/icon.css"/>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<style type="text/css">
+body{
+	background: #F0E3E3;
+	color: #441E5A;
+	font-family: '微软雅黑'
+}
+h1{
+	text-align: center;
+	text-shadow:2px 5px 20px #441E5A;
+}
+#upload{
+	border:1px solid #00b4ff;
+	width:200px;
+	height:36px;
+	display:block;
+	margin:30px auto;
+	text-align:center;
+	line-height:36px;
+	text-decoration:none;
+	font-size:16px;
+	color:#00b4ff;
+	border-radius:36px;
+}
+#progressframe{
+	border:1px solid #00b4ff;
+	width:470px;
+	height:38px;
+	margin:30px auto;
+	border-radius:36px;
+}
+#progress{
+	width:0%;
+	height:38px;
+	margin:0px 0px 0px 0px;
+	border-radius:36px;
+	background:rgba(172, 201, 79, 0.81) none repeat scroll 0% 0%;
+}
+#content{
+	width:470px;
+	height:38px;
+	margin:-38px auto;
+	border-radius:36px;
+	text-align: center;
+	line-height: 38px;
+	color:#3B51F4;
+}
+</style>
+</head>
+<body>
+<h1>Spring MVC文件上传实现进度条</h1>
+<form id="form" method="post" enctype="multipart/form-data">
+<a href="javascript:void(0)" id="upload">上传文件</a>
+<div id="progressframe">
+	<div id="progress"></div>
+	<div id="content"></div>
+</div>
+<input type="file" name="files" multiple="multiple" style="display: none" id="file">
+</form>
+<script type="text/javascript">
+	$(function(){
+		var flag = true;
+		$('#file').change(function(){
+			$('#form').form('submit',{
+				url:'upload/save.json',
+				onSubmit:function(){
+					return true;
+				},
+				success:function(data){
+					var dataObj = eval("("+data+")");
+					if(dataObj.success){
+						showMessager(dataObj.msg);
+					}else {
+						flag = false;
+						$.messager.alert('提示',dataObj.msg,'info');
+					}
+				}
+			});
+			getProgress();
+		});
+		$('#upload').click(function(){
+			$('#file').click();
+		});
+		function getProgress(){
+			do{
+				$.ajax({  
+		            type : "post",  
+		            url : "upload/getProgress.json",
+		            async : false,
+		            dataType:'json',
+		            success : function(data){
+		            	if(data.bytesRead > 0) {
+		            		$('#progress').css('width',data.percent);
+							$('#content').text(data.percent);
+							if(data.bytesRead == data.contentLength) {
+								$('#progress').css('width','100%');
+								$('#content').text('100%');
+								flag = false;
+							}
+		            	}
+		            }  
+			     });
+			}while(flag);
+		}
+	});
+</script>
+</body>
+</html>

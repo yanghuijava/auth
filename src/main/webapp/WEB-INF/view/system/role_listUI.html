@@ -1,0 +1,95 @@
+<#include "/common/head.html">
+<div data-options="region:'west',border:false" style="width:900px;padding:5px 0px 0px 12px;">
+	<table id="role-dg${rand}"></table>
+</div>
+<div data-options="region:'center',border:false" style="padding:5px 0px 0px 24px;">
+	<ul id="res-tree${rand}"></ul>
+</div>
+<script type="text/javascript">
+	$(function(){
+		var dg = $('#role-dg${rand}');
+		var resTree = $('#res-tree${rand}');
+		dg.edatagrid({
+			url: 'role/list.json',
+		    rownumbers: true,
+		    singleSelect: true,
+		    saveUrl: 'role/save.json',
+			updateUrl: 'role/update.json',
+			destroyUrl: 'role/delete.json',
+			idField: 'id',
+			onSave:function(index,row){showMessager(row.message);},
+			onDestroy:function(index,row){showMessager(row.message);},
+			onError: function(index,data) {$.messager.alert('错误', data.message);},
+		    columns:[[
+    			{field:'ck',checkbox:'true',width:50},
+    			{field:'id',title:'序号',hidden:true},
+    			{field:'code',title:'角色编码',width:140,editor:{
+    				type:'validatebox',
+    				options:{required:true}
+    			}},
+    	        {field:'name',title:'角色名称',width:140,editor:{
+    				type:'validatebox',
+    				options:{required:true}
+    			}},
+    	        {field:'description',title:'描述',width:500,editor:{
+    				type:'validatebox'
+    			}},
+		    ]],
+		    <@toolbar code="ROLETOOLBAR"/>,
+		  	onClickRow:function(index,row){
+		  		var queryParams = resTree.tree("options").queryParams;
+		  		queryParams.roleId = row.id;
+		  		resTree.tree("reload");
+		  		queryParams.roleId = null;
+		  	}
+		});
+		
+		resTree.tree({
+			url:'resource/queryRoleResource.json',
+			checkbox:true,
+			animate:true,
+			cascadeCheck:false
+		});
+		
+		function add(){
+			dg.edatagrid('addRow');
+		}
+		function save(){
+			dg.edatagrid('saveRow');
+		}
+		function cancel(){
+			dg.edatagrid('cancelRow');
+		}
+		function destroy(){
+			dg.edatagrid('destroyRow');
+		}
+		
+		function saveAuth(){
+			var nodes = resTree.tree('getChecked',['checked','indeterminate']);
+			var param = {};
+			var selectRow = dg.edatagrid('getSelected');
+			if(selectRow == null ||selectRow.length == 0) {
+				$.messager.alert('警告', '请选择需要保存权限的行！','warning');
+				return;
+			}
+			param.roleId = selectRow.id;
+			var resIds = '';
+			$.each(nodes, function(index,element){
+				resIds += element.id + ',';
+			});
+			resIds = resIds.substring(0,resIds.length - 1);
+			param.resIds = resIds;
+			$.post('resource/saveRoleResource.json',param,function(data){
+				if(data.success) {
+					showMessager(data.msg);
+				}else {
+					$.messager.alert('错误', data.msg,'error');
+				}
+			},'json');
+		}
+		function reload(){
+			dg.edatagrid('reload');
+		}
+	});
+</script>
+<#include "/common/foot.html">

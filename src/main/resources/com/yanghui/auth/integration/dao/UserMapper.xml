@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yanghui.auth.integration.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.yanghui.auth.biz.model.User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="org_id" property="orgId" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap type="com.yanghui.auth.biz.model.UserRole" id="roleRoleResultMap">
+  	<id column="id" property="id" jdbcType="INTEGER" />
+  	<id column="user_id" property="userId" jdbcType="INTEGER" />
+  	<id column="role_id" property="roleId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, org_id, account, password, name, telephone, mobile, email, type, status, remark, 
+    create_by, create_time, update_by, update_time
+  </sql>
+  
+  <select id="selectByKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select  <include refid="Base_Column_List" /> from user where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByAccount" resultMap="BaseResultMap" parameterType="String" >
+    select  <include refid="Base_Column_List" /> from user where account = #{account}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.Integer" >
+    delete from user where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="deleteUserRole" parameterType="java.lang.Integer" >
+    delete from user_role where user_id = #{userId}
+  </delete>
+  
+  <insert id="insert" parameterType="com.yanghui.auth.biz.model.User" useGeneratedKeys="true" keyProperty="id">
+    insert into user (org_id, account, password, name, telephone, mobile, email, type, status, remark, create_by,create_time, update_by, update_time)
+    values (#{orgId}, #{account}, #{password}, #{name}, #{telephone},#{mobile}, #{email}, #{type},
+    #{normalStatus},#{remark},#{currentAccount}, #{currentTime}, #{currentAccount},#{currentTime})
+  </insert>
+  
+  <insert id="insertUserRole" parameterType="com.yanghui.auth.biz.model.UserRole">
+    insert into user_role (user_id, role_id, status, remark, create_by,create_time, update_by, update_time)
+    values (#{userId},#{roleId},#{normalStatus},#{remark},#{currentAccount}, #{currentTime}, #{currentAccount},#{currentTime})
+  </insert>
+  
+  <update id="update" parameterType="com.yanghui.auth.biz.model.User" >
+    update user
+    <set>
+    	<if test="orgId != null">org_id = #{orgId},</if>
+    	<if test="account">account = #{account},</if>
+    	<if test="password != null">password = #{password},</if>
+    	<if test="name != null">name = #{name},</if>
+    	<if test="telephone != null">telephone = #{telephone},</if>
+    	<if test="mobile != null">mobile = #{mobile},</if>
+    	<if test="email != null">email = #{email},</if>
+    	<if test="type != null">type = #{type},</if>
+    	<if test="status != null">status = #{status},</if>
+    	<if test="remark != null">remark = #{remark},</if>
+    	update_by = #{currentAccount},
+        update_time = #{currentTime}
+    </set>
+    where id = #{id}
+  </update>
+  
+   <select id="selectAll" resultMap="BaseResultMap" parameterType="map" >
+   	select <include refid="Base_Column_List"/> from user 
+   	<where>
+   		<if test="account != null"> and account = #{account}</if>
+   		<if test="password != null"> and password = #{password}</if>
+   		and status = 0
+   	</where>
+   </select>
+   
+   <select id="getPage" resultMap="BaseResultMap" parameterType="map">
+   	select <include refid="Base_Column_List"/> from user
+	<where>
+		<if test="account != null"> and account = #{account}</if>
+		<if test="name != null"> and name = #{name}</if>
+	</where>
+	limit #{rowFrom},#{pageRow}
+   </select>
+   <select id="getPageCount" resultType="int" parameterType="map">
+   	select count(*) from user
+   	<where>
+		<if test="account != null"> and account = #{account}</if>
+		<if test="name != null"> and name = #{name}</if>
+	</where>
+   </select>
+   
+   <select id="selectRoleByUserId" parameterType="int" resultMap="roleRoleResultMap">
+   		select id,user_id,role_id from user_role where user_id = #{userId}
+   </select>
+   
+</mapper>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base href="${base}"></base>
+<meta charset="UTF-8">
+<title>首页</title>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<style type="text/css">
+body{
+	background: rgb(242, 242, 242);
+}
+.loginArea01{
+	width: 990px;
+	height:48px;
+	margin: 0 auto;
+	padding-top: 15px;
+}
+.loginArea02{
+	width: 890px;
+	height:355px;
+	margin: 60px auto;
+}
+.loginAd{
+	width:445px;
+	height:355px;
+	float: left;
+}
+.loginFormArea{
+	width:265px;
+	height:355px;
+	padding:0px 90px;
+	background:#fff;
+	float: left;
+}
+.lineDi{
+	width:265px;
+	height:56px;
+	line-height: 26px;
+	position:relative;
+	overflow:visible;
+	margin: 16px 0px 0px -13px;
+}
+.lineDi span{
+	font-size: 12px;
+	font-family: "宋体";
+	color: #999;
+	height: 20px;
+	line-height: 20px;
+	display: block;
+	margin-top: 1px;
+}
+.lineDi input{
+	width:330px;
+	height: 30px;
+	font-size: 14px;
+}
+#submitBnt{
+	border:1px solid #C52020;
+	width:333px;
+	height:36px;
+	display:block;
+	margin:42px -12px;
+	text-align:center;
+	line-height:36px;
+	text-decoration:none;
+	font-size:16px;
+	color:#fff;
+	background: #C52020;
+	border-radius:6px;
+}
+#submitBnt:HOVER {
+	background: #AB1212;
+}
+.inputUserIco{
+	position:absolute;
+	width: 18px;
+	height: 18px;
+	margin: -27px 317px;
+	background:transparent url("images/man.png") repeat scroll 0% 0%
+}
+.inputPassIco{
+	position:absolute;
+	width: 18px;
+	height: 18px;
+	margin: -27px 317px;
+	background:transparent url("images/lock.png") repeat scroll 0% 0%
+}
+.errorMsg{
+	border:1px solid red;
+	width:326px;
+	height:90px;
+	margin: -32px 0px 0px -8px;
+	background: #E77861;
+	color: #fff;
+	line-height: 36px;
+	font-size: 14px;
+}
+</style>
+</head>
+<body>
+<div class="loginArea01">
+	<img alt="登入图片01" src="images/login_logo_03.png" width="342" height="48">
+</div>
+<div class="loginArea02">
+	<div class="loginAd">
+		<img alt="登入图片02" src="images/loginAd.jpg" width="445" height="355">
+	</div>
+	<div class="loginFormArea">
+		<form action="login/in.html" id="form" method="post">
+			<#if targerUrl??>
+				<input type="hidden" name="targerUrl" value="${targerUrl}">
+			</#if>
+			<div class="lineDi">
+				<span>用户名</span>
+				<input type="text" name="account" >
+				<div class="inputUserIco"></div>
+			</div>
+			<div class="lineDi">
+				<span>密码</span>
+				<input type="password" name="password" >
+				<div class="inputPassIco"></div>
+			</div>
+			<a href="javascript:void(0)" id="submitBnt">登陆</a>
+			<#if errorMsg??>
+				<div class="errorMsg">${errorMsg}</div>
+			</#if>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('#submitBnt').click(function(){
+			$('#form').submit();
+		});
+	});
+</script>
+</body>
+</html>
