@@ -26,22 +26,27 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public int save(Role role) {
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("name", role.getName());
-		List<Role> findRoleList = this.roleMapper.getAll(param);
-		if(findRoleList != null && findRoleList.size() > 0){
-			throw new RuntimeException("角色名称不能重复！");
+		if(role == null) {
+			return 0;
 		}
-		param.clear();
-		param.put("code", role.getCode());
-		findRoleList = this.roleMapper.getAll(param);
-		if(findRoleList != null && findRoleList.size() > 0){
-			throw new RuntimeException("角色编码不能重复！");
-		}
-		if(role.getId() == null) {
+		if(role.getId() == null){
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("name", role.getName());
+			List<Role> findRoleList = this.roleMapper.getAll(param);
+			if(findRoleList != null && findRoleList.size() > 0){
+				throw new RuntimeException("角色名称不能重复！");
+			}
+			param.clear();
+			param.put("code", role.getCode());
+			findRoleList = this.roleMapper.getAll(param);
+			if(findRoleList != null && findRoleList.size() > 0){
+				throw new RuntimeException("角色编码不能重复！");
+			}
 			return this.roleMapper.insert(role);
+		}else {
+			role.setCode(null);
+			return this.roleMapper.update(role);
 		}
-		return this.roleMapper.update(role);
 	}
 
 	@Override

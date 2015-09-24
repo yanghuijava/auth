@@ -2,6 +2,7 @@ package com.yanghui.auth.biz.model;
 
 import java.util.Date;
 
+
 public class BaseObject {
 	
 	private Integer id;
