@@ -2,6 +2,8 @@ package com.yanghui.auth.biz.model;
 
 import java.util.Date;
 
+import com.yanghui.auth.biz.utils.AppContext;
+
 
 public class BaseObject {
 	
@@ -62,6 +64,10 @@ public class BaseObject {
 		return 0;
 	}
 	public String getCurrentAccount(){
+		User user = AppContext.getCurrentAppUser();
+		if(user != null){
+			return user.getAccount();
+		}
 		return "development";
 	}
 }
