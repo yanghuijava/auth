@@ -48,7 +48,24 @@
 			url:'resource/queryRoleResource.json',
 			checkbox:true,
 			animate:true,
-			cascadeCheck:false
+			cascadeCheck:false,
+			onCheck:function(node, checked){
+				if(checked) {
+					var childrenNodeList = resTree.tree('getChildren', node.target);
+					if(childrenNodeList != null) {
+						$.each(childrenNodeList,function(i,n){
+							resTree.tree('check',n.target);
+						});
+					}
+				}else {
+					var childrenNodeList = resTree.tree('getChildren', node.target);
+					if(childrenNodeList != null) {
+						$.each(childrenNodeList,function(i,n){
+							resTree.tree('uncheck',n.target);
+						});
+					}
+				}
+			}
 		});
 		
 		function add(){

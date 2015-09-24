@@ -87,13 +87,21 @@
 	   	     	{field:'createTime',title:'创建时间',width:80},
 	   	        {field:'updateTime',title:'更新时间',width:80}
 		    ]],
-		    toolbar:[
-				{text:'新增',iconCls:'icon-add',handler:function(){dg.edatagrid('addRow');}},
-				{text:'保存',iconCls:'icon-ok',handler:function(){dg.edatagrid('saveRow');}},
-				{text:'取消',iconCls:'icon-cancel',handler:function(){dg.edatagrid('cancelRow');}},
-				{text:'删除',iconCls:'icon-remove',handler:function(){dg.edatagrid('destroyRow');}},
-		    ]
+		    <@toolbar code="USERTOOLBAR"/>
 		});
+		
+		function add(){
+			dg.edatagrid('addRow');
+		}
+		function save(){
+			dg.edatagrid('saveRow');
+		}
+		function cancel(){
+			dg.edatagrid('cancelRow');
+		}
+		function destroy(){
+			dg.edatagrid('destroyRow');
+		}
 	});
 </script>
 <#include "/common/foot.html">
