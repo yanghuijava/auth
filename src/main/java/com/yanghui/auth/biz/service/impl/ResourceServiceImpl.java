@@ -96,4 +96,20 @@ public class ResourceServiceImpl implements ResourceService {
 		}
 		return true;
 	}
+
+	@Override
+	public String initsql() {
+		List<Resource> resourceList = this.resourceMapper.selectAll(new HashMap<String, Object>());
+		StringBuffer result = new StringBuffer();
+		for(Resource r : resourceList){
+			StringBuffer sb = new StringBuffer("insert into resource (id,pid,type,name,code,index_,action,url,icon,remark,status) values(");
+			sb.append(r.getId()).append(",").append(r.getPid()).append(",").append(r.getType()).append(",")
+				  .append("'" + r.getName() + "'").append(",").append("'" + r.getCode() + "'").append(",")
+				  .append(r.getIndex()).append(",").append("'" + r.getAction() + "'").append(",")
+				  .append("'" + r.getUrl() + "'").append(",").append("'" + r.getIcon() + "'").append(",")
+				  .append("" + r.getRemark() + "'").append(",").append(r.getStatus()).append(");");
+			result.append(sb).append("\r\n");
+		}
+		return result.toString();
+	}
 }

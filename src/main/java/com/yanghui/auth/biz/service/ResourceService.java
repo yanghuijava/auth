@@ -44,4 +44,9 @@ public interface ResourceService {
 	 * @return
 	 */
 	public boolean isLeaf(Resource resource);
+	/**
+	 * 初始化sql
+	 * @return
+	 */
+	public String initsql();
 }

@@ -39,7 +39,7 @@ public class ToolbarDirective implements TemplateDirectiveModel{
 			}else {
 				throw new RuntimeException("code is not empty!");
 			}
-			List<Integer> types = new ArrayList<>();
+			List<Integer> types = new ArrayList<Integer>();
 			types.add(3);
 			List<Resource> resourceList = null;
 			if("admin".equals(user.getAccount())){

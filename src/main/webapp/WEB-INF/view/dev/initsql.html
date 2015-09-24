@@ -1,0 +1,10 @@
+<#include "/common/head.html">
+<div id="p" class="easyui-panel" title="" style="width:1800px;height:1000px;padding:10px;background:#fafafa;border: 0px">
+    <textarea id="initsql" rows="40" cols="200" readonly="readonly"></textarea>
+</div>
+<script type="text/javascript">
+	$.post('dev/initsql.json',function(data){
+		$('#initsql').val(data);
+	});
+</script>
+<#include "/common/foot.html">

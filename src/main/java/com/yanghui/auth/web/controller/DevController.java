@@ -142,4 +142,15 @@ public class DevController {
 			return new Message(false);
 		}
 	}
+	
+	@RequestMapping("/initsql.json")
+	@ResponseBody
+	public String initsql() {
+		try {
+			return this.resourceService.initsql();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "初始化失败！";
+		}
+	}
 }
